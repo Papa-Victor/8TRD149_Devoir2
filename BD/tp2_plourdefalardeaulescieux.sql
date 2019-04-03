@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 03, 2019 at 04:19 AM
+-- Generation Time: Apr 03, 2019 at 06:20 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS `book` (
 --
 
 INSERT INTO `book` (`ISBN`, `title`, `edition`, `year`) VALUES
+(152345, 'My Second Book', 6, 1999),
 (156132, 'My First Book', 5, 1936),
 (10026274, 'Extremely Loud and Incredibly Close', 1, 1931),
 (10473662, 'Don\'t Bend Over in the Garden, Granny, You Know Them Taters Got Eyes', 1, 1930),
@@ -152,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `bookcopy` (
   PRIMARY KEY (`copyNo`),
   UNIQUE KEY `copyNo_UNIQUE` (`copyNo`),
   KEY `ISBN_idx` (`ISBN`)
-) ENGINE=InnoDB AUTO_INCREMENT=2003 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2004 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `bookcopy`
@@ -302,7 +303,8 @@ INSERT INTO `bookcopy` (`copyNo`, `ISBN`, `available`) VALUES
 (1140, 82638242, 1),
 (1141, 82638242, 1),
 (2000, 10026274, 0),
-(2002, 82638242, 0);
+(2002, 82638242, 0),
+(2003, 152345, 1);
 
 -- --------------------------------------------------------
 
@@ -316,9 +318,22 @@ CREATE TABLE IF NOT EXISTS `bookloan` (
   `dateOut` datetime NOT NULL,
   `dateDue` datetime NOT NULL,
   `borrowerNo` int(11) NOT NULL,
+  PRIMARY KEY (`copyNo`,`dateOut`),
+  UNIQUE KEY `copyNo_UNIQUE` (`copyNo`),
+  UNIQUE KEY `dateOut_UNIQUE` (`dateOut`),
   KEY `copyNo_foreign_key_idx` (`copyNo`),
   KEY `borrowerNo_foreign_key_idx` (`borrowerNo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `bookloan`
+--
+
+INSERT INTO `bookloan` (`copyNo`, `dateOut`, `dateDue`, `borrowerNo`) VALUES
+(1009, '2019-03-15 00:00:00', '2019-03-29 00:00:00', 729),
+(1010, '2019-04-03 00:00:00', '2019-04-17 00:00:00', 103),
+(1018, '2019-04-01 00:00:00', '2019-04-15 00:00:00', 103),
+(1022, '2019-02-01 00:00:00', '2019-02-15 00:00:00', 103);
 
 -- --------------------------------------------------------
 
@@ -334,7 +349,7 @@ CREATE TABLE IF NOT EXISTS `borrower` (
   PRIMARY KEY (`borrowerNo`),
   UNIQUE KEY `borrowerNo_UNIQUE` (`borrowerNo`),
   UNIQUE KEY `borrowerName_UNIQUE` (`borrowerName`(50))
-) ENGINE=InnoDB AUTO_INCREMENT=989 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=996 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `borrower`
@@ -391,7 +406,11 @@ INSERT INTO `borrower` (`borrowerNo`, `borrowerName`, `borrowerAdress`) VALUES
 (964, 'Hal Futrell', '955 Red Nook, Dodge Hollow, Colorado, 81620-2557, US, (720) 916-0285'),
 (973, 'Lyndsey Bloch', '1184 Golden Heath, Stargo, Michigan, 49469-4402, US, (906) 641-1870'),
 (987, 'Eliseo Karls', '4231 Amber Impasse, Tiger, Massachusetts, 01674-7918, US, (339) 011-6425'),
-(988, 'Bob Perron', '15 chemin du sentier');
+(988, 'Bob Perron', '15 chemin du sentier'),
+(990, 'Pob Berron', '15 sentier de chemin'),
+(991, 'Le Beau Antoine', '30 rue de la rue'),
+(993, 'Le Beau Antoin', '30 rue de la rue'),
+(995, 'Le Beau Antoi', '30 rue du sentier');
 
 --
 -- Constraints for dumped tables
