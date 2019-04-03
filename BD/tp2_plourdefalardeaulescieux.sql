@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 03, 2019 at 12:04 AM
+-- Generation Time: Apr 03, 2019 at 04:19 AM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS `book` (
 --
 
 INSERT INTO `book` (`ISBN`, `title`, `edition`, `year`) VALUES
+(156132, 'My First Book', 5, 1936),
 (10026274, 'Extremely Loud and Incredibly Close', 1, 1931),
 (10473662, 'Don\'t Bend Over in the Garden, Granny, You Know Them Taters Got Eyes', 1, 1930),
 (11524160, 'Alexander and the Terrible, Horrible, No Good, Very Bad Day', 1, 1943),
@@ -145,13 +146,13 @@ INSERT INTO `book` (`ISBN`, `title`, `edition`, `year`) VALUES
 
 DROP TABLE IF EXISTS `bookcopy`;
 CREATE TABLE IF NOT EXISTS `bookcopy` (
-  `copyNo` int(11) NOT NULL,
+  `copyNo` int(11) NOT NULL AUTO_INCREMENT,
   `ISBN` int(11) NOT NULL,
   `available` tinyint(4) NOT NULL,
   PRIMARY KEY (`copyNo`),
   UNIQUE KEY `copyNo_UNIQUE` (`copyNo`),
   KEY `ISBN_idx` (`ISBN`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2003 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `bookcopy`
@@ -300,7 +301,8 @@ INSERT INTO `bookcopy` (`copyNo`, `ISBN`, `available`) VALUES
 (1139, 70737154, 1),
 (1140, 82638242, 1),
 (1141, 82638242, 1),
-(2000, 10026274, 0);
+(2000, 10026274, 0),
+(2002, 82638242, 0);
 
 -- --------------------------------------------------------
 
@@ -314,7 +316,7 @@ CREATE TABLE IF NOT EXISTS `bookloan` (
   `dateOut` datetime NOT NULL,
   `dateDue` datetime NOT NULL,
   `borrowerNo` int(11) NOT NULL,
-  PRIMARY KEY (`copyNo`,`dateOut`),
+  KEY `copyNo_foreign_key_idx` (`copyNo`),
   KEY `borrowerNo_foreign_key_idx` (`borrowerNo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -326,13 +328,13 @@ CREATE TABLE IF NOT EXISTS `bookloan` (
 
 DROP TABLE IF EXISTS `borrower`;
 CREATE TABLE IF NOT EXISTS `borrower` (
-  `borrowerNo` int(11) NOT NULL,
+  `borrowerNo` int(11) NOT NULL AUTO_INCREMENT,
   `borrowerName` mediumtext NOT NULL,
   `borrowerAdress` longtext NOT NULL,
   PRIMARY KEY (`borrowerNo`),
   UNIQUE KEY `borrowerNo_UNIQUE` (`borrowerNo`),
   UNIQUE KEY `borrowerName_UNIQUE` (`borrowerName`(50))
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=989 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `borrower`
@@ -388,7 +390,8 @@ INSERT INTO `borrower` (`borrowerNo`, `borrowerName`, `borrowerAdress`) VALUES
 (962, 'Tod Kerby', '5685 Rustic Towers, Charity, Alberta, T8Z-1G8, CA, (780) 646-9363'),
 (964, 'Hal Futrell', '955 Red Nook, Dodge Hollow, Colorado, 81620-2557, US, (720) 916-0285'),
 (973, 'Lyndsey Bloch', '1184 Golden Heath, Stargo, Michigan, 49469-4402, US, (906) 641-1870'),
-(987, 'Eliseo Karls', '4231 Amber Impasse, Tiger, Massachusetts, 01674-7918, US, (339) 011-6425');
+(987, 'Eliseo Karls', '4231 Amber Impasse, Tiger, Massachusetts, 01674-7918, US, (339) 011-6425'),
+(988, 'Bob Perron', '15 chemin du sentier');
 
 --
 -- Constraints for dumped tables
