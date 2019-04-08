@@ -132,5 +132,5 @@ while(request != "exit"):
         getLoanedCopies(db)
     elif (request == "6"):
         borrowBookCopy(db)
-
+    print("\n\n" + choices)
     request = input("Choice : ")
