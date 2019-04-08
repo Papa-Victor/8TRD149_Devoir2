@@ -1,5 +1,5 @@
 import requests
-import mysql.connector
+import connector
 from datetime import date
 from datetime import timedelta
 
@@ -15,7 +15,7 @@ def AddBook(database):
         cursor.execute(requests.addBookRequest, val)
         database.commit()
         print ("Adding the book was successful")
-    except mysql.connector.Error as error :
+    except connector.Error as error :
         database.rollback()
         print("The book could not be added to database : {}".format(error))
     cursor.close()
@@ -42,7 +42,7 @@ def AddBookCopy(database):
         cursor.execute(requests.addBookCopyRequest, val)
         database.commit()
         print ("Adding the book copy was successful")
-    except mysql.connector.Error as error :
+    except connector.Error as error :
         database.rollback()
         print("The book copy could not be added to database : {}".format(error))
     cursor.close()
@@ -70,7 +70,7 @@ def AddBorrower(database):
         cursor.execute(requests.addBorrowerRequest, val)
         database.commit()
         print ("Adding the borrower was successful")
-    except mysql.connector.Error as error :
+    except connector.Error as error :
         database.rollback()
         print("The borrower could not be added to database : {}".format(error))
     cursor.close()
@@ -101,12 +101,12 @@ def borrowBookCopy(database):
         cursor.execute(requests.borrowBookRequest, val)
         database.commit()
         print ("Borrowing the book was successful")
-    except mysql.connector.Error as error :
+    except connector.Error as error :
         database.rollback()
         print("Borrowing the book was not successful : {}".format(error))
     cursor.close()
 
-db = mysql.connector.connect(
+db = connector.connect(
   host="localhost",
   user="root",
   passwd="",
