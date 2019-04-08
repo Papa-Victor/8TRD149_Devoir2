@@ -94,24 +94,17 @@ def borrowBookCopy(database):
     bookName = input("Enter the name of the book you want to check out (string) : ")
     today  = date.today()
 
-    val = (name, today)
     cursor = database.cursor()
-    cursor.execute(requests.borrowerNoOfLoansRequest, val)
-
-    result = cursor.fetchall()
-    if(result[0][0] < maxBooks):
-        fourteenDays = timedelta(14)
-        val = (bookName, today, today + fourteenDays, name)
-        try:            
-            cursor.execute(requests.borrowBookRequest, val)
-            database.commit()
-            print ("Borrowing the book was successful")
-        except mysql.connector.Error as error :
-            database.rollback()
-            print("Borrowing the book was not successful : {}".format(error))
-        cursor.close()
-    else:
-        print("Sorry, but you already have" + str(maxBooks) + "books checked out at this time")
+    fourteenDays = timedelta(14)
+    val = (bookName, today, today + fourteenDays, name)
+    try:            
+        cursor.execute(requests.borrowBookRequest, val)
+        database.commit()
+        print ("Borrowing the book was successful")
+    except mysql.connector.Error as error :
+        database.rollback()
+        print("Borrowing the book was not successful : {}".format(error))
+    cursor.close()
 
 db = mysql.connector.connect(
   host="localhost",

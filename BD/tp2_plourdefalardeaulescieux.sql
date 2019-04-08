@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 03, 2019 at 06:20 PM
+-- Generation Time: Apr 08, 2019 at 08:37 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -183,7 +183,7 @@ INSERT INTO `bookcopy` (`copyNo`, `ISBN`, `available`) VALUES
 (1020, 53001908, 1),
 (1021, 53001908, 1),
 (1022, 64494248, 1),
-(1023, 64494248, 1),
+(1023, 64494248, 0),
 (1024, 51372721, 1),
 (1025, 51372721, 1),
 (1026, 43488136, 1),
@@ -319,8 +319,6 @@ CREATE TABLE IF NOT EXISTS `bookloan` (
   `dateDue` datetime NOT NULL,
   `borrowerNo` int(11) NOT NULL,
   PRIMARY KEY (`copyNo`,`dateOut`),
-  UNIQUE KEY `copyNo_UNIQUE` (`copyNo`),
-  UNIQUE KEY `dateOut_UNIQUE` (`dateOut`),
   KEY `copyNo_foreign_key_idx` (`copyNo`),
   KEY `borrowerNo_foreign_key_idx` (`borrowerNo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -330,10 +328,35 @@ CREATE TABLE IF NOT EXISTS `bookloan` (
 --
 
 INSERT INTO `bookloan` (`copyNo`, `dateOut`, `dateDue`, `borrowerNo`) VALUES
+(1001, '2019-04-04 00:00:00', '2019-04-18 00:00:00', 247),
+(1007, '2019-04-08 00:00:00', '2019-04-22 00:00:00', 103),
 (1009, '2019-03-15 00:00:00', '2019-03-29 00:00:00', 729),
 (1010, '2019-04-03 00:00:00', '2019-04-17 00:00:00', 103),
-(1018, '2019-04-01 00:00:00', '2019-04-15 00:00:00', 103),
-(1022, '2019-02-01 00:00:00', '2019-02-15 00:00:00', 103);
+(1015, '2019-04-08 00:00:00', '2019-04-22 00:00:00', 103);
+
+--
+-- Triggers `bookloan`
+--
+DROP TRIGGER IF EXISTS `bookloan_BEFORE_INSERT`;
+DELIMITER $$
+CREATE TRIGGER `bookloan_BEFORE_INSERT` BEFORE INSERT ON `bookloan` FOR EACH ROW BEGIN
+	IF(3 = (SELECT COUNT(*) FROM bookloan WHERE borrowerNo = NEW.borrowerNo))
+	THEN
+		BEGIN
+			SIGNAL SQLSTATE '45000'
+                    SET MESSAGE_TEXT = 'Cannot borrow book: user already at max loans';
+		END;
+	END IF;
+    IF(0 = (SELECT available FROM bookcopy WHERE copyNo = NEW.copyNo))
+	THEN
+		BEGIN
+			SIGNAL SQLSTATE '45000'
+                    SET MESSAGE_TEXT = 'Cannot borrow: copy is not available';
+		END;
+	END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
